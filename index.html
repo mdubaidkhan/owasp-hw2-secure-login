@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Login Form</title>
+</head>
+<body>
+    <h1>Login</h1>
+
+    <form id="loginForm" method="POST" action="/login">
+        <label for="email">Email:</label>
+        <input type="text" id="email" name="email">
+
+        <br><br>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password">
+
+        <br><br>
+
+        <button type="submit">Login</button>
+    </form>
+
+    <p id="error" style="color: red;"></p>
+
+    <script>
+        const form = document.getElementById("loginForm");
+        const error = document.getElementById("error");
+
+        form.addEventListener("submit", function(event) {
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value;
+
+            error.textContent = "";
+
+            if (email === "") {
+                event.preventDefault();
+                error.textContent = "Email is required.";
+                return;
+            }
+
+            if (!email.includes("@")) {
+                event.preventDefault();
+                error.textContent = "Email must contain @.";
+                return;
+            }
+
+            if (password === "") {
+                event.preventDefault();
+                error.textContent = "Password is required.";
+                return;
+            }
+
+            if (password.length < 8) {
+                event.preventDefault();
+                error.textContent = "Password must be at least 8 characters.";
+                return;
+            }
+        });
+    </script>
+</body>
+</html>
