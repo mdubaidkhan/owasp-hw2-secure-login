@@ -1,22 +1,25 @@
 # OWASP HW2 - Secure Login Form
 
-A basic HTML and JavaScript login form created for the OWASP Juice Shop / OWASP Top 10 assignment.
+A basic HTML and JavaScript login form created for the OWASP Juice Shop / OWASP Top 10 assignment (CSCE 703, HW 2-B).
 
 ## Features
 
 - Email and password login
 - Client-side validation
 - Server-side validation
-- Email must contain @
+- Email must contain `@`
 - Password must be at least 8 characters
 - Reflected XSS testing and mitigation
 
 ## Project Structure
 
-    owasp-hw2-secure-login/
-    ├── index.html
-    ├── server.js
-    └── README.md
+```
+owasp-hw2-secure-login/
+├── index.html
+├── server.js              # Fixed (secure) version
+├── server_vulnerable.js   # Original version with the reflected XSS flaw
+└── README.md
+```
 
 ## Requirements
 
@@ -29,45 +32,54 @@ No external packages are required.
 
 Clone the repository:
 
-    git clone https://github.com/mdubaidkhan/owasp-hw2-secure-login.git
+```
+git clone https://github.com/mdubaidkhan/owasp-hw2-secure-login.git
+cd owasp-hw2-secure-login
+```
 
-Enter the project directory:
+### Option 1: Secure (fixed) version
 
-    cd owasp-hw2-secure-login
+```
+node server.js
+```
 
-Start the server:
+### Option 2: Vulnerable version (to reproduce the XSS attack first)
 
-    node server.js
+```
+node server_vulnerable.js
+```
 
-Open the application:
+Then open the application in your browser:
 
-    http://localhost:8080
+```
+http://localhost:8080
+```
+
+Both servers use port 8080, so stop one (Ctrl+C) before starting the other.
 
 ## Validation
 
-The application performs both client-side and server-side validation.
-
-It checks that:
+The application performs both client-side and server-side validation. It checks that:
 
 - Email is not empty
-- Email contains @
+- Email contains `@`
 - Password is not empty
 - Password is at least 8 characters
 
 ## XSS Testing
 
-The original application reflected user-controlled email input directly into the HTML response.
+To reproduce the attack, run `server_vulnerable.js`, open `http://localhost:8080`, and submit this payload as the email (with any password of 8+ characters):
 
-Test payload:
+```
+<script>alert('XSS')</script>@example.com
+```
 
-    <script>alert('XSS')</script>@example.com
+The vulnerable server reflects the email directly into the HTML response, so the script executes and an alert appears.
 
-The payload successfully executed JavaScript in the browser.
-
-The vulnerability was fixed by HTML-encoding special characters before displaying user-controlled input.
-
-After the fix, the same payload was displayed as text and did not execute.
+To verify the fix, stop the vulnerable server and run `node server.js`. The same payload now appears as plain text and does not execute, because special characters (`&`, `<`, `>`, `"`, `'`) are HTML-encoded before being included in the response.
 
 ## Security Note
 
 Client-side validation can be bypassed, so server-side validation is also implemented. User-controlled data is HTML-encoded before being included in the response to prevent reflected XSS.
+
+> **Warning:** `server_vulnerable.js` is intentionally insecure and exists for educational purposes only. Do not deploy it.
