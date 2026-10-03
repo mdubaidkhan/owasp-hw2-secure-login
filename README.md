@@ -1,40 +1,73 @@
-\# OWASP HW2 - Secure Login Form
-
-
+# OWASP HW2 - Secure Login Form
 
 A basic HTML and JavaScript login form created for the OWASP Juice Shop / OWASP Top 10 assignment.
 
+## Features
 
+- Email and password login
+- Client-side validation
+- Server-side validation
+- Email must contain @
+- Password must be at least 8 characters
+- Reflected XSS testing and mitigation
 
-\## Features
+## Project Structure
 
+    owasp-hw2-secure-login/
+    ├── index.html
+    ├── server.js
+    └── README.md
 
+## Requirements
 
-\- Email and password login fields
+- Node.js
+- Web browser
 
-\- Client-side validation
+No external packages are required.
 
-\- Server-side validation
+## How to Run
 
-\- Email must contain `@`
+Clone the repository:
 
-\- Password must contain at least 8 characters
+    git clone https://github.com/mdubaidkhan/owasp-hw2-secure-login.git
 
-\- Protection against reflected XSS through HTML encoding of user-controlled output
+Enter the project directory:
 
+    cd owasp-hw2-secure-login
 
+Start the server:
 
-\## Project Structure
+    node server.js
 
+Open the application:
 
+    http://localhost:8080
 
-```text
+## Validation
 
-owasp-hw2-secure-login/
+The application performs both client-side and server-side validation.
 
-├── index.html
+It checks that:
 
-├── server.js
+- Email is not empty
+- Email contains @
+- Password is not empty
+- Password is at least 8 characters
 
-└── README.md
+## XSS Testing
 
+The original application reflected user-controlled email input directly into the HTML response.
+
+Test payload:
+
+    <script>alert('XSS')</script>@example.com
+
+The payload successfully executed JavaScript in the browser.
+
+The vulnerability was fixed by HTML-encoding special characters before displaying user-controlled input.
+
+After the fix, the same payload was displayed as text and did not execute.
+
+## Security Note
+
+Client-side validation can be bypassed, so server-side validation is also implemented. User-controlled data is HTML-encoded before being included in the response to prevent reflected XSS.
